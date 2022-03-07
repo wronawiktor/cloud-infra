@@ -57,6 +57,15 @@ done
 
 scp -o 'StrictHostKeyChecking no' ${TR_USERNAME}@${MASTER}:/home/${TR_USERNAME}/.kube/config ./admin.conf
 export KUBECONFIG=`pwd`/admin.conf
+
+[ -d ~/.kube ] || mkdir ~/.kube
+scp -o 'StrictHostKeyChecking no' ${TR_USERNAME}@${MASTER}:/home/${TR_USERNAME}/.kube/config ~/.kube/config
+
+RELEASE="$(curl -sSL https://dl.k8s.io/release/stable.txt)"
+curl -L --remote-name-all https://storage.googleapis.com/kubernetes-release/release/${RELEASE}/bin/linux/amd64/kubectl
+chmod +x kubectl
+sudo mv kubectl /usr/bin/
+
 kubectl get nodes
 
 log ""

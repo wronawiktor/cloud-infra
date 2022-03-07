@@ -11,13 +11,14 @@ set -eux
 cat >> /etc/modules-load.d/99-k8s.conf << EOF
 br_netfilter
 EOF
+modprobe br_netfilter
 
 # Network-related sysctls
 cat >> /etc/sysctl.d/99-k8s.conf << EOF
-net.bridge.bridge-nf-call-ip6tables = 1
 net.bridge.bridge-nf-call-iptables = 1
 net.ipv4.ip_forward = 1
 net.ipv4.conf.all.forwarding = 1
 EOF
+sysctl -p /etc/sysctl.d/99-k8s.conf
 
 exit 0

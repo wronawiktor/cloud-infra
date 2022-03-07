@@ -9,9 +9,11 @@ fi
 # https://github.com/rancher-sandbox/lockc/issues/178
 # Using latest containerd v1.6.0 will cause following issue 
 # runc: symbol lookup error: runc: undefined symbol: seccomp_notify_respond
+CONTAINERD_URL=https://github.com/containerd/containerd/releases/download/v1.5.9/cri-containerd-cni-1.5.9-linux-amd64.tar.gz
 curl -L "${CONTAINERD_URL}" | sudo tar --no-overwrite-dir -C / -xz
 
 systemctl enable containerd
+systemctl start containerd
 
 CNI_VERSION=$(curl -s https://api.github.com/repos/containernetworking/plugins/releases/latest | jq -r '.tag_name')
 ARCH="amd64"
