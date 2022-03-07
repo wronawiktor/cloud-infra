@@ -1,4 +1,6 @@
 *.qcow2
 .terraform
 .terraform.lock.hc
-.terraform.tfstate
+terraform.tfstate
+terraform.tfvars
+
