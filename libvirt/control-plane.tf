@@ -1,6 +1,6 @@
 resource "libvirt_volume" "control_plane" {
-  name           = "lockc-control-plane-volume-${count.index}"
-  base_volume_id = libvirt_volume.lockc_image.id
+  name           = "k8s-control-plane-volume${count.index + 1}"
+  base_volume_id = libvirt_volume.cloud_image.id
   size           = var.control_plane_disk_size
   count          = var.control_planes
 }
@@ -29,10 +29,11 @@ data "template_file" "control_plane_cloud_init" {
   count    = var.control_planes
 
   vars = {
-    hostname        = "lockc-control-plane-${count.index}"
+    hostname        = "k8s-cp${count.index + 1}"
     locale          = var.locale
     timezone        = var.timezone
     authorized_keys = join("\n", formatlist("      - %s", var.authorized_keys))
+    packages        = join("\n", formatlist("  - %s", var.packages))
     repositories    = join("\n", data.template_file.control_plane_repositories.*.rendered)
     commands        = join("\n", data.template_file.control_plane_commands.*.rendered)
   }
@@ -40,14 +41,14 @@ data "template_file" "control_plane_cloud_init" {
 
 resource "libvirt_cloudinit_disk" "control_plane" {
   count     = var.control_planes
-  name      = "lockc-control-plane-cloudinit-disk-${count.index}"
+  name      = "k8s-control-plane-cloudinit-disk${count.index + 1}"
   pool      = var.pool
   user_data = data.template_file.control_plane_cloud_init[count.index].rendered
 }
 
 resource "libvirt_domain" "control_plane" {
   count      = var.control_planes
-  name       = "lockc-control-plane-${count.index}"
+  name       = "k8s-cp${count.index + 1}"
   memory     = var.control_plane_memory
   vcpu       = var.control_plane_vcpu
   cloudinit  = element(libvirt_cloudinit_disk.control_plane.*.id, count.index)
@@ -62,13 +63,19 @@ resource "libvirt_domain" "control_plane" {
 
   network_interface {
     network_name   = var.network_name
-    hostname       = "lockc-control-plane-${count.index}"
+    hostname       = "k8s-cp${count.index + 1}"
     wait_for_lease = true
   }
 
   graphics {
     type        = "vnc"
     listen_type = "address"
+  }
+
+  console {
+    type        = "pty"
+    target_port = "0"
+    target_type = "serial"
   }
 }
 
@@ -83,6 +90,7 @@ resource "null_resource" "control_plane_wait_cloudinit" {
     )
     user = var.username
     type = "ssh"
+    private_key = "${file("~/.ssh/id_rsa")}"
   }
 
   provisioner "remote-exec" {
@@ -103,6 +111,7 @@ resource "null_resource" "control_plane_provision" {
     )
     user = var.username
     type = "ssh"
+    private_key = "${file("~/.ssh/id_rsa")}"
   }
 
   provisioner "remote-exec" {
@@ -121,6 +130,7 @@ resource "null_resource" "control_plane_provision_k8s_containerd" {
     )
     user = var.username
     type = "ssh"
+    private_key = "${file("~/.ssh/id_rsa")}"
   }
 
   provisioner "remote-exec" {

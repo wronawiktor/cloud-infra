@@ -1,6 +1,6 @@
 resource "libvirt_volume" "worker" {
-  name           = "lockc-worker-volume-${count.index}"
-  base_volume_id = libvirt_volume.lockc_image.id
+  name           = "k8s-worker-volume${count.index + 1}"
+  base_volume_id = libvirt_volume.cloud_image.id
   size           = var.worker_disk_size
   count          = var.workers
 }
@@ -29,10 +29,11 @@ data "template_file" "worker_cloud_init" {
   count    = var.workers
 
   vars = {
-    hostname        = "lockc-worker-${count.index}"
+    hostname        = "k8s-worker${count.index + 1}"
     locale          = var.locale
     timezone        = var.timezone
     authorized_keys = join("\n", formatlist("      - %s", var.authorized_keys))
+    packages        = join("\n", formatlist("  - %s", var.packages))
     repositories    = join("\n", data.template_file.worker_repositories.*.rendered)
     commands        = join("\n", data.template_file.worker_commands.*.rendered)
   }
@@ -40,14 +41,14 @@ data "template_file" "worker_cloud_init" {
 
 resource "libvirt_cloudinit_disk" "worker" {
   count     = var.workers
-  name      = "lockc-worker-cloudinit-disk-${count.index}"
+  name      = "k8s-worker-cloudinit-disk-${count.index + 1}"
   pool      = var.pool
   user_data = data.template_file.worker_cloud_init[count.index].rendered
 }
 
 resource "libvirt_domain" "worker" {
   count      = var.workers
-  name       = "lockc-worker-plane-${count.index}"
+  name       = "k8s-worker${count.index+1}"
   memory     = var.worker_memory
   vcpu       = var.worker_vcpu
   cloudinit  = element(libvirt_cloudinit_disk.worker.*.id, count.index)
@@ -62,13 +63,19 @@ resource "libvirt_domain" "worker" {
 
   network_interface {
     network_name   = var.network_name
-    hostname       = "lockc-worker-${count.index}"
+    hostname       = "k8s-worker${count.index + 1}"
     wait_for_lease = true
   }
 
   graphics {
     type        = "vnc"
     listen_type = "address"
+  }
+
+  console {
+    type        = "pty"
+    target_port = "0"
+    target_type = "serial"
   }
 }
 
@@ -81,8 +88,9 @@ resource "null_resource" "worker_wait_cloudinit" {
       libvirt_domain.worker.*.network_interface.0.addresses.0,
       count.index
     )
-    user = "opensuse"
+    user = var.username
     type = "ssh"
+    private_key = "${file("~/.ssh/id_rsa")}"
   }
 
   provisioner "remote-exec" {
@@ -101,8 +109,9 @@ resource "null_resource" "worker_provision" {
       libvirt_domain.worker.*.network_interface.0.addresses.0,
       count.index
     )
-    user = "opensuse"
+    user = var.username
     type = "ssh"
+    private_key = "${file("~/.ssh/id_rsa")}"
   }
 
   provisioner "remote-exec" {
@@ -121,6 +130,7 @@ resource "null_resource" "worker_provision_k8s_containerd" {
     )
     user = var.username
     type = "ssh"
+    private_key = "${file("~/.ssh/id_rsa")}"
   }
 
   provisioner "remote-exec" {
@@ -134,7 +144,7 @@ resource "null_resource" "worker_reboot" {
 
   provisioner "local-exec" {
     environment = {
-      user = "opensuse"
+      user = var.username
       host = element(
         libvirt_domain.worker.*.network_interface.0.addresses.0,
         count.index

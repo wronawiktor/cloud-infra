@@ -10,17 +10,17 @@ variable "pool" {
 
 variable "image_name" {
   description = "Image name in libvirt"
-  default     = "lockc-image"
+  default     = "cloud-image"
 }
 
 variable "image_path" {
   description = "Path or URL to the image"
-  default     = "http://download.opensuse.org/distribution/leap/15.3/appliances/openSUSE-Leap-15.3-JeOS.x86_64-OpenStack-Cloud.qcow2"
+  default     = "https://cloud-images.ubuntu.com/bionic/current/bionic-server-cloudimg-amd64.img"
 }
 
 variable "network_name" {
   description = "Network name in libvirt"
-  default     = "lockc-network"
+  default     = "cloud-network"
 }
 
 variable "network_mode" {
@@ -30,7 +30,7 @@ variable "network_mode" {
 
 variable "dns_domain" {
   description = "DNS domain name"
-  default     = "lockc.local"
+  default     = "cloud.local"
 }
 
 variable "stack_name" {
@@ -71,24 +71,11 @@ variable "packages" {
   description = "List of addditional packagess to install"
   type        = list(string)
   default     = [
-    "bpftool",
-    "conntrack-tools",
-    "ebtables",
-    "ethtool",
-    "iptables",
     "jq",
-    "kernel-default",
-    "-kernel-default-base",
     "socat",
     "strace",
     "tmux"
   ]
-}
-
-variable "enable_docker" {
-  description = "Enable Docker support (as a non-clustered container engine)"
-  type        = bool
-  default     = false
 }
 
 variable "enable_k8s_containerd" {

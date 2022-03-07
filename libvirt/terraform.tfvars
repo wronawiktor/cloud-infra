@@ -3,9 +3,8 @@ libvirt_uri = "qemu:///system"
 
 pool = "default"
 
-image_name = "lockc-image"
-
-image_path = "http://download.opensuse.org/distribution/leap/15.3/appliances/openSUSE-Leap-15.3-JeOS.x86_64-OpenStack-Cloud.qcow2"
+image_name = "cloud-image"
+image_path = "https://cloud-images.ubuntu.com/bionic/current/bionic-server-cloudimg-amd64.img"
 
 network_name = "cloud-network"
 network_cidr = "10.16.0.0/24"
@@ -19,17 +18,12 @@ timezone = "Etc/UTC"
 repositories = {} 
  
 packages = [
-  "bpftool",
-  "conntrack-tools",
-  "ebtables",
-  "ethtool",
-  "iptables",
+  "curl",
   "jq",
-  "socat",
-  "strace",
-  "tmux"
+  "strace"
 ]
 
+username = "student"
 control_planes = 1
 control_plane_memory = 1048
 control_plane_vcpu = 1
@@ -41,5 +35,5 @@ worker_vcpu = 1
 worker_disk_size = "25769803776"
 
 authorized_keys = [
-    "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDvhWKN/uRo0k2RP6xSOomGpS0xsjWtjrZSd8pUGJFiCUICXGcZsGHbsO45Lmuct3opMjsMfjnh3aEULWKZF1nykDhS2+FSP1cckYi34MnxN69TOtU9ko8/Mo9bCgfD80DZ0gjAdLBtuua9saFKPnKcfJrnJUHdGSt67NiNSmIk2u5aMKun7LPZwNKZOt2I+n0SEEYIbDeitP/AW1iEIlYZ2Kk+/DQfl7xrUB5sS3ree++KmnTOZXq+8K9NgHnaJodWx49TxWm+VcthAJcFNVwirhvUEbJPhJ0TpvNwFtYfzLHT375FhI1rFXQyNv2WTItv+uqL9I74UUmIDOMYDSXn mjura@buggy"
+    "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDphayKQWAIZ7C+7vstprWA/MJUa0UTQtOWNKte4PT1PJcaxfMT57GqqFdGJDop6SZmRmWwGRKdpwj5AZCX+tGsbx3/o/lbmCbL+mXxX88Fc8748Lv/OxvAilPar2dNJp4JR1tDChV7JJHeDhAl/ANhXYQoEHAAnV/RZLnODM2DN2wURfFjgDj0iOyY3fZbSBaMUHFyeDwJ7Pa38HvclVpFhQN428VtuE1IxvaLClD2D2a7Hm4gKSZNqImkqWxtunE5gcq/+BFCHfkxEkOzGCRu/VMIBh85IoowuQj4WIY4dlC7LcyJNKF2NQWnPsZ0l9SxVoAVtNd/p0Qpmr/NazxLshK8CGuhlGR2pZle5tnLM2o9Cu73eMoRZBzO4EQub0sYOnpKKJqJBjaa862MluWRzmRjJMMLg21LsEFn9399nLYeKSkOKqqqPGrDlj71V4oNEdmX+wGn8G4qSFmZwbZu/6Pql66ASWd66/NRXWQnaLO/OiUqmLkV2liC+LrkJ97jF3xnxHaT9LkaQ7livB1hknUI/3w0L5S/FbUDzsQ4AMx9+SGG7tYhzqT1qTXziEvKIBxq44j/tG/i0ltGHTc3Ac0/puWdYYk6P/23k2rD2d62hdJ99CcIBhsoTB6gBQCsKu2/5LqCzSmO5db2gg6eL+86iWF65VbIiRkWmgrEaQ== root@lfs458host1"
 ]

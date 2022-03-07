@@ -1,1 +1,1 @@
-  - [ zypper, -n, install, --allow-vendor-change, ${packages} ]
+#  - [ zypper, -n, install, --allow-vendor-change, ${packages} ]
