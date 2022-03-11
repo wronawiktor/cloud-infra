@@ -1,6 +1,7 @@
 *.qcow2
 .terraform
-.terraform.lock.hc
-terraform.tfstate
+.terraform.lock.hcl
+admin.conf
+kubectl
+terraform.tfstate*
 terraform.tfvars
-
