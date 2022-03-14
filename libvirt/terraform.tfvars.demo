@@ -1,0 +1,36 @@
+pool = "default"
+
+image_name = "cloud-image"
+image_path = "https://cloud-images.ubuntu.com/bionic/current/bionic-server-cloudimg-amd64.img"
+
+network_name = "cloud-network"
+network_cidr = "10.16.0.0/24"
+network_mode = "nat"
+
+dns_domain = "cloud.local"
+
+locale = "en_US.UTF-8"
+timezone = "Etc/UTC"
+
+repositories = {} 
+ 
+packages = [
+  "conntrack",
+  "curl",
+  "jq",
+  "socat",
+  "strace"
+]
+
+username = "student"
+control_planes = 1
+control_plane_memory = 2048
+control_plane_vcpu = 2
+control_plane_disk_size = "25769803776"
+
+workers = 1
+worker_memory = 2048
+worker_vcpu = 2
+worker_disk_size = "25769803776"
+
+#authorized_keys = [ "" ]
