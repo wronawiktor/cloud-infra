@@ -78,8 +78,8 @@ variable "packages" {
   ]
 }
 
-variable "enable_k8s_containerd" {
-  description = "Enable Kubernetes with containerd CRI"
+variable "kubernetes_enable" {
+  description = "Enable installation of Kubernetes"
   type        = bool
   default     = true
 }
