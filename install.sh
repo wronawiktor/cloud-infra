@@ -20,7 +20,9 @@ echo "Added your user to the libvirt and kvm group"
 # Check user permissions
 
 # Set security_driver = "none"
-if [ grep "security_driver = \"none\"" /etc/libvirt/qemu.conf != "security_driver = \"none\"" ]; then
+COMMAND="$(sudo grep "security_driver = \"none\"" /etc/libvirt/qemu.conf)"
+COMMAND=${COMMAND// /}
+if [[ "$COMMAND" != 'security_driver="none"' ]] ; then
     sudo sed -i -e 's/#security_driver = "selinux"/security_driver = "none"/g' /etc/libvirt/qemu.conf
     echo "security_driver set to none"
 else
