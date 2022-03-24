@@ -9,7 +9,7 @@ apt update && apt upgrade --yes
 echo "Upgrade complete"
 
 # Install required packages
-apt install qemu-kvm libvirt-daemon-system libvirt-clients bridge-utils virt-manager git-core libguestfs-tools jq
+apt install --yes qemu-kvm libvirt-daemon-system libvirt-clients bridge-utils virt-manager git-core libguestfs-tools jq software-properties-common
 echo "Install complete"
 
 # Add your user to the libvirt and kvm group
@@ -31,18 +31,26 @@ fi
 
 # Start libvirtd
 systemctl start libvirtd
-# sudo systemctl status libvirtd
-if [ pidof libvirtd != "" ]; then
-    echo "Libvirt is running"
+if [[ $(pidof libvirtd) ]]; then
+        echo "Libvirt is running"
 else
-    echo "Libvirt error"
-    exit 1
+        echo "Libvirt error"
+        exit 1
 fi
 
 # Download Linux cloud image
-IMG_PATH ="/var/lib/libvirt/images/bionic-server-cloudimg-amd64.img"
-curl -L https://cloud-images.ubuntu.com/bionic/current/bionic-server-cloudimg-amd64.img --output $IMG_PATH
-if [ -f "$IMG_PATH" ]; then
+#IMG_PATH ="/var/lib/libvirt/images/bionic-server-cloudimg-amd64.img"
+IMG_PATH="/var/lib/libvirt/images/"
+if [ -d "$IMG_PATH" ]; then
+	echo "Folder exist"
+	echo "Downloading"
+else
+	mkdir -p "$IMG_PATH"
+fi
+
+curl -L https://cloud-images.ubuntu.com/bionic/current/bionic-server-cloudimg-amd64.img --output ${IMG_PATH+"bionic-server-cloudimg-amd64.img"}
+
+if [ -f "${IMG_PATH+"bionic-server-cloudimg-amd64.img"}" ]; then
     echo "System image was downloaded"
 else
     echo "System image download error"
@@ -50,7 +58,6 @@ else
 fi
 
 # Install Terraform
--i
 curl -fsSL https://apt.releases.hashicorp.com/gpg | apt-key add -
 apt-add-repository "deb [arch=$(dpkg --print-architecture)] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
 apt install terraform
@@ -65,11 +72,11 @@ fi
 git clone https://github.com/go4clouds/cloud-infra
 
 # Copy settings file for Terraform
-TF_SET_FILE="~/git/cloud-infra/libvirt/terraform.tfvars"
+TF_SET_FILE="./libvirt/terraform.tfvars"
 if [ -f $TF_SET_FILE ]; then
     echo "Terraform settings file already exist"
 else
-    cp ~/git/cloud-infra/libvirt/terraform.tfvars.examples $TF_SET_FILE
+    cp ./libvirt/terraform.tfvars.examples $TF_SET_FILE
     if [ -f $TF_SET_FILE ]; then
         echo "Terraform settings file copied"
     else 
@@ -80,11 +87,11 @@ fi
 
 # Copy your ssh-key
 if [ -f "~/.ssh/id_rsa.pub" ]; then
-    SSH_PUB_KEY = cat ~/.ssh/id_rsa.pub
+    SSH_PUB_KEY=cat ~/.ssh/id_rsa.pub
     TEMPLATE=authorized_keys = [
         ""
     ]
-    TEMPLATE_K = authorized_keys = [
+    TEMPLATE_K=authorized_keys = [
         "${SSH_PUB_KEY}"
     ]
     sed -i -e 's/${TEMPLATE}/${TEMPLATE_K}/g' $TF_SET_FILE
