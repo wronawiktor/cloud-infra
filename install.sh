@@ -39,13 +39,13 @@ else
 fi
 
 # Download Linux cloud image
-#IMG_PATH ="/var/lib/libvirt/images/bionic-server-cloudimg-amd64.img"
 IMG_PATH="/var/lib/libvirt/images/"
 if [ -d "$IMG_PATH" ]; then
 	echo "Folder exist"
-	echo "Downloading"
 else
 	mkdir -p "$IMG_PATH"
+	echo "Folder has been created: $IMG_PATH"
+	echo "Downloading..."
 fi
 
 curl -L https://cloud-images.ubuntu.com/bionic/current/bionic-server-cloudimg-amd64.img --output ${IMG_PATH+"bionic-server-cloudimg-amd64.img"}
@@ -87,14 +87,8 @@ fi
 
 # Copy your ssh-key
 if [ -f "~/.ssh/id_rsa.pub" ]; then
-    SSH_PUB_KEY=cat ~/.ssh/id_rsa.pub
-    TEMPLATE=authorized_keys = [
-        ""
-    ]
-    TEMPLATE_K=authorized_keys = [
-        "${SSH_PUB_KEY}"
-    ]
-    sed -i -e 's/${TEMPLATE}/${TEMPLATE_K}/g' $TF_SET_FILE
+    SSH_PUB_KEY="$(cat ~/.ssh/id_rsa.pub)"
+    sed -i -e "s|\"\"|\"${SSH_PUB_KEY}\"|g" "$TF_SET_FILE"
     echo "Added your ssh key to terraform settings"
 else
     echo "No public ssh key to copy, you can generate it by 'ssh-keygen' "
