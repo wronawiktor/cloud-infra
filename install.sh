@@ -1,4 +1,4 @@
-#! /bin/bash
+#!/bin/bash
 
 if [ "$(id -u)" != "0" ]; then
   exec sudo "$0" "$@"
@@ -69,7 +69,7 @@ else
 fi
 
 # Clone cloud-infra
-git clone https://github.com/go4clouds/cloud-infra
+# git clone https://github.com/go4clouds/cloud-infra
 
 # Copy settings file for Terraform
 TF_SET_FILE="./libvirt/terraform.tfvars"
@@ -88,7 +88,9 @@ fi
 # Copy your ssh-key
 if [ -f "~/.ssh/id_rsa.pub" ]; then
     SSH_PUB_KEY="$(cat ~/.ssh/id_rsa.pub)"
-    sed -i -e "s|\"\"|\"${SSH_PUB_KEY}\"|g" "$TF_SET_FILE"
+#   echo "authorized_keys = [\n \\"$SSH_PUB_KEY\"]"
+#   test = [\\n \"$TEST\" \\n]" >> "$TF_SET_FILE"
+    sed -i -e "s|\"SSH_PUB_KEY\"|\"${SSH_PUB_KEY}\"|g" "$TF_SET_FILE"
     echo "Added your ssh key to terraform settings"
 else
     echo "No public ssh key to copy, you can generate it by 'ssh-keygen' "
