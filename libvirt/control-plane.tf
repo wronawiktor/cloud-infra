@@ -121,7 +121,7 @@ resource "null_resource" "control_plane_provision" {
 
 resource "null_resource" "control_plane_provision_k8s_containerd" {
   depends_on = [null_resource.control_plane_provision]
-  count      = var.control_planes
+  count      = var.kubernetes_enable ? var.control_planes : 0
 
   connection {
     host = element(
@@ -144,7 +144,7 @@ resource "null_resource" "control_plane_provision_k8s_containerd" {
 
 resource "null_resource" "control_plane_reboot" {
   depends_on = [null_resource.control_plane_provision_k8s_containerd]
-  count      = var.control_planes
+  count      = var.kubernetes_enable ? var.control_planes : 0
 
   provisioner "local-exec" {
     environment = {
