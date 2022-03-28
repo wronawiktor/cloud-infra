@@ -121,7 +121,7 @@ resource "null_resource" "worker_provision" {
 
 resource "null_resource" "worker_provision_k8s_containerd" {
   depends_on = [null_resource.worker_provision]
-  count      = var.workers
+  count      = var.kubernetes_enable ? var.workers : 0
 
   connection {
     host = element(
@@ -140,7 +140,7 @@ resource "null_resource" "worker_provision_k8s_containerd" {
 
 resource "null_resource" "worker_reboot" {
   depends_on = [null_resource.worker_provision_k8s_containerd]
-  count      = var.workers
+  count      = var.kubernetes_enable ? var.workers : 0
 
   provisioner "local-exec" {
     environment = {
