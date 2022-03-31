@@ -134,6 +134,10 @@ resource "null_resource" "control_plane_provision_k8s_containerd" {
   }
 
   provisioner "remote-exec" {
+    environment = {
+      CONTAINERD_VER = var.containerd_version
+      KUBERNETES_VER = var.kubernetes_version
+    }
     script = "provision-k8s-containerd.sh"
   }
 
