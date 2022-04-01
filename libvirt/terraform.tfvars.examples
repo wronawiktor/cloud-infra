@@ -49,11 +49,11 @@
 # kubernetes_enable = false
 
 # Choose version of Containerd
-# EXAMPLE: containerd_version = "1.1.1" or containerd_version = "latest"
-# containerd_version = "1.5.9"
+# EXAMPLE: containerd_version = "v1.6.2", containerd_version = "v1.5.11", containerd_version = "v1.4.13", containerd_version = "latest",
+# containerd_version = "v1.5.9"
 
 # Choose version of Kubernetes
-# EXAMPLE: kubernetes_version = "v1.1.1" or kubernetes_version = "latest"
+# EXAMPLE: kubernetes_version = "v1.24.0", kubernetes_version = "v1.22.8", kubernetes_version = "v1.21.11", kubernetes_version = "latest",
 # kubernetes_version = "v1.23.5"
 
 # Default user in VMs

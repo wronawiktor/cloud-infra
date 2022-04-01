@@ -87,7 +87,7 @@ variable "kubernetes_enable" {
 variable "containerd_version" {
   description = "Choose version of Containerd"
   type        = string
-  default     = "1.5.9"
+  default     = "v1.5.9"
 }
 
 variable "kubernetes_version" {
