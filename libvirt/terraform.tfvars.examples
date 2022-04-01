@@ -33,7 +33,6 @@
 # repositories = {
 #   repository1 = "http://example.my.repo.com/repository1/"
 #   repository2 = "http://example.my.repo.com/repository2/"
-#   Kernel_stable_Backport = "https://download.opensuse.org/repositories/Kernel:/stable:/Backport/standard/"
 # }
  
 # Minimum required packages. Do not remove them.
@@ -78,9 +77,7 @@
 
 # ssh keys to inject into all the nodes
 # EXAMPLE:
-# authorized_keys = [
-#  "ssh-rsa <key-content>"
-# ]
 authorized_keys = [
-    ""
+ "SSH_PUB_KEY"
 ]
+
