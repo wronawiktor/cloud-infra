@@ -133,8 +133,16 @@ resource "null_resource" "worker_provision_k8s_containerd" {
     private_key = "${file("~/.ssh/id_rsa")}"
   }
 
+  provisioner "file" {
+    source      = "provision-k8s-containerd.sh"
+    destination = "/tmp/provision-k8s-containerd.sh"
+  }
+
   provisioner "remote-exec" {
-    script = "provision-k8s-containerd.sh"
+  inline = [
+    "chmod +x /tmp/provision-k8s-containerd.sh",
+    "/tmp/provision-k8s-containerd.sh ${var.containerd_version} ${var.kubernetes_version}",
+    ]
   }
 }
 

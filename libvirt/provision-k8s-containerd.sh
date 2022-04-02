@@ -5,6 +5,11 @@ if [ "$(id -u)" != "0" ]; then
   exec sudo "$0" "$@"
 fi
 
+if [ "$#" -eq 2 ]; then
+  CONTAINERD_VER=$1
+  KUBERNETES_VER=$2
+fi
+
 if [ $CONTAINERD_VER != "latest" ]; then
   CONTAINERD_VER=$(echo "$CONTAINERD_VER" | sed "s/v//g") #Delete "v" from string
   CONTAINERD_URL=https://github.com/containerd/containerd/releases/download/v${CONTAINERD_VER}/cri-containerd-cni-${CONTAINERD_VER}-linux-amd64.tar.gz
