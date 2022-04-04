@@ -86,7 +86,7 @@ else
 fi
 
 # Copy your ssh-key
-if [ -f "~/.ssh/id_rsa.pub" ]; then
+if [ -f "/root/.ssh/id_rsa.pub" ]; then
     SSH_PUB_KEY="$(cat ~/.ssh/id_rsa.pub)"
 #   echo "authorized_keys = [\n \\"$SSH_PUB_KEY\"]"
 #   test = [\\n \"$TEST\" \\n]" >> "$TF_SET_FILE"

@@ -84,6 +84,18 @@ variable "kubernetes_enable" {
   default     = true
 }
 
+variable "containerd_version" {
+  description = "Choose version of Containerd"
+  type        = string
+  default     = "v1.5.9"
+}
+
+variable "kubernetes_version" {
+  description = "Choose version of Kubernetes"
+  type        = string
+  default     = "v1.23.5"
+}
+
 variable "username" {
   description = "Default user in VMs"
   default     = "opensuse"
