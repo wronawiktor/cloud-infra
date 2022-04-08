@@ -20,7 +20,7 @@
 # network_mode = "nat"
 
 # Name of DNS domain
-# dnsdomain = "cloud.local"
+# dns_domain = "cloud.local"
 
 # System locales to set on all the nodes
 # locale = "en_US.UTF-8"
@@ -45,8 +45,13 @@
 #  "strace"
 #]
 
-#Enable installation of Kubernetes
+# Enable installation of Kubernetes
 # kubernetes_enable = false
+
+# Choose cni-plugin
+# EXAMPLE:
+# cni_plugin = "calico"
+# cni_plugin = "cilium"
 
 # Choose version of Containerd
 # EXAMPLE: containerd_version = "v1.6.2", containerd_version = "v1.5.11", containerd_version = "v1.4.13", containerd_version = "latest",

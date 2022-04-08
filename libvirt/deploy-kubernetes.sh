@@ -14,7 +14,13 @@ fi
 
 sleep 5
 
-CILIUM_VERSION=$(curl -s https://api.github.com/repos/cilium/cilium/releases/latest | jq -r '.tag_name' | sed -e 's/^v//')
+if [ $CNI_PLUGIN == "cilium" ]; then
+    CILIUM_VERSION=$(curl -s https://api.github.com/repos/cilium/cilium/releases/latest | jq -r '.tag_name' | sed -e 's/^v//')
+    CNI_INSTALL="helm repo add cilium https://helm.cilium.io/
+    helm install cilium cilium/cilium --version ${CILIUM_VERSION} --namespace kube-system --set kubeProxyReplacement=disabled"
+else
+    CNI_INSTALL="kubectl apply -f https://projectcalico.docs.tigera.io/manifests/calico.yaml"
+fi
 
 info "### Run following commands to bootstrap Kubernetes cluster:\\n"
 
@@ -28,8 +34,7 @@ for MASTER in $TR_MASTER_IPS; do
           mkdir -p /home/${TR_USERNAME}/.kube
           sudo cp /etc/kubernetes/admin.conf /home/${TR_USERNAME}/.kube/config
           sudo chown ${TR_USERNAME}:users /home/${TR_USERNAME}/.kube/config
-          helm repo add cilium https://helm.cilium.io/
-          helm install cilium cilium/cilium --version ${CILIUM_VERSION} --namespace kube-system --set kubeProxyReplacement=disabled
+          eval "$CNI_INSTALL"
 EOF
 
         export KUBEADM_MASTER_JOIN=`ssh -o 'StrictHostKeyChecking no' -l ${TR_USERNAME} ${MASTER} tail -n12 kubeadm-init.log | head -n3`

@@ -84,6 +84,12 @@ variable "kubernetes_enable" {
   default     = true
 }
 
+variable "cni_plugin" {
+  description = "Choose cni-plugin"
+  type        = string
+  default     = "calico"
+}
+
 variable "containerd_version" {
   description = "Choose version of Containerd"
   type        = string
