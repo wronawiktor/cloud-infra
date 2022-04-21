@@ -40,7 +40,7 @@ variable "stack_name" {
 
 variable "network_cidr" {
   description = "Network CIDR"
-  default     = "10.16.0.0/24"
+  default     = "10.168.0.0/24"
 }
 
 variable "locale" {
@@ -105,7 +105,7 @@ variable "kubernetes_version" {
 
 variable "username" {
   description = "Default user in VMs"
-  default     = "opensuse"
+  default     = "student"
 }
 
 variable "control_planes" {
