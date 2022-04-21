@@ -1,5 +1,5 @@
 resource "libvirt_volume" "worker" {
-  name           = "k8s-worker-volume${count.index + 1}"
+  name           = "worker-volume${count.index + 1}"
   base_volume_id = libvirt_volume.cloud_image.id
   size           = var.worker_disk_size
   count          = var.workers
@@ -29,7 +29,7 @@ data "template_file" "worker_cloud_init" {
   count    = var.workers
 
   vars = {
-    hostname        = "k8s-worker${count.index + 1}"
+    hostname        = "worker${count.index + 1}"
     locale          = var.locale
     timezone        = var.timezone
     authorized_keys = join("\n", formatlist("      - %s", var.authorized_keys))
@@ -41,14 +41,14 @@ data "template_file" "worker_cloud_init" {
 
 resource "libvirt_cloudinit_disk" "worker" {
   count     = var.workers
-  name      = "k8s-worker-cloudinit-disk-${count.index + 1}"
+  name      = "worker-cloudinit-disk-${count.index + 1}"
   pool      = var.pool
   user_data = data.template_file.worker_cloud_init[count.index].rendered
 }
 
 resource "libvirt_domain" "worker" {
   count      = var.workers
-  name       = "k8s-worker${count.index+1}"
+  name       = "worker${count.index+1}"
   memory     = var.worker_memory
   vcpu       = var.worker_vcpu
   cloudinit  = element(libvirt_cloudinit_disk.worker.*.id, count.index)
@@ -63,7 +63,7 @@ resource "libvirt_domain" "worker" {
 
   network_interface {
     network_name   = var.network_name
-    hostname       = "k8s-worker${count.index + 1}"
+    hostname       = "worker${count.index + 1}"
     wait_for_lease = true
   }
 

@@ -1,5 +1,5 @@
 resource "libvirt_volume" "control_plane" {
-  name           = "k8s-control-plane-volume${count.index + 1}"
+  name           = "control-plane-volume${count.index + 1}"
   base_volume_id = libvirt_volume.cloud_image.id
   size           = var.control_plane_disk_size
   count          = var.control_planes
@@ -29,7 +29,7 @@ data "template_file" "control_plane_cloud_init" {
   count    = var.control_planes
 
   vars = {
-    hostname        = "k8s-cp${count.index + 1}"
+    hostname        = "cp${count.index + 1}"
     locale          = var.locale
     timezone        = var.timezone
     authorized_keys = join("\n", formatlist("      - %s", var.authorized_keys))
@@ -41,14 +41,14 @@ data "template_file" "control_plane_cloud_init" {
 
 resource "libvirt_cloudinit_disk" "control_plane" {
   count     = var.control_planes
-  name      = "k8s-control-plane-cloudinit-disk${count.index + 1}"
+  name      = "control-plane-cloudinit-disk${count.index + 1}"
   pool      = var.pool
   user_data = data.template_file.control_plane_cloud_init[count.index].rendered
 }
 
 resource "libvirt_domain" "control_plane" {
   count      = var.control_planes
-  name       = "k8s-cp${count.index + 1}"
+  name       = "cp${count.index + 1}"
   memory     = var.control_plane_memory
   vcpu       = var.control_plane_vcpu
   cloudinit  = element(libvirt_cloudinit_disk.control_plane.*.id, count.index)
@@ -63,7 +63,7 @@ resource "libvirt_domain" "control_plane" {
 
   network_interface {
     network_name   = var.network_name
-    hostname       = "k8s-cp${count.index + 1}"
+    hostname       = "cp${count.index + 1}"
     wait_for_lease = true
   }
 
