@@ -48,9 +48,9 @@ else
 	echo "Downloading..."
 fi
 
-curl -L https://cloud-images.ubuntu.com/bionic/current/bionic-server-cloudimg-amd64.img --output ${IMG_PATH+"bionic-server-cloudimg-amd64.img"}
+curl -L https://cloud-images.ubuntu.com/focal/current/focal-server-cloudimg-amd64.img --output ${IMG_PATH+"focal-server-cloudimg-amd64.img"}
 
-if [ -f "${IMG_PATH+"bionic-server-cloudimg-amd64.img"}" ]; then
+if [ -f "${IMG_PATH+"focal-server-cloudimg-amd64.img"}" ]; then
     echo "System image was downloaded"
 else
     echo "System image download error"

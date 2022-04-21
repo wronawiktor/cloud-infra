@@ -15,7 +15,7 @@ variable "image_name" {
 
 variable "image_path" {
   description = "Path or URL to the image"
-  default     = "https://cloud-images.ubuntu.com/bionic/current/bionic-server-cloudimg-amd64.img"
+  default     = "https://cloud-images.ubuntu.com/focal/current/focal-server-cloudimg-amd64.img"
 }
 
 variable "network_name" {

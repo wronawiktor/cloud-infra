@@ -59,7 +59,7 @@
 
 6. Download your favorite Linux cloud image e.g. [Ubuntu Cloud Image][UbCi] to `/var/lib/libvirt/images` directory:
     ```sh
-    sudo  curl -L https://cloud-images.ubuntu.com/bionic/current/bionic-server-cloudimg-amd64.img --output /var/lib/libvirt/images/bionic-server-cloudimg-amd64.img
+    sudo  curl -L https://cloud-images.ubuntu.com/focal/current/focal-server-cloudimg-amd64.img --output /var/lib/libvirt/images/focal-server-cloudimg-amd64.img
     ```
     
 7.  Install Terraform project on you environment:

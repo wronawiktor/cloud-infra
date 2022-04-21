@@ -1,7 +1,7 @@
 pool = "default"
 
 image_name = "cloud-image"
-image_path = "https://cloud-images.ubuntu.com/bionic/current/bionic-server-cloudimg-amd64.img"
+image_path = "https://cloud-images.ubuntu.com/focal/current/focal-server-cloudimg-amd64.img"
 
 network_name = "cloud-network"
 network_cidr = "10.16.0.0/24"

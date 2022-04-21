@@ -8,7 +8,7 @@
 # image_name = "cloud-image"
 
 # Path or URL to the image to use
-# image_path = "https://cloud-images.ubuntu.com/bionic/current/bionic-server-cloudimg-amd64.img"
+# image_path = "https://cloud-images.ubuntu.com/focal/current/focal-server-cloudimg-amd64.img"
 
 # Name of the external network to be used
 # network_name = "cloud-network"
