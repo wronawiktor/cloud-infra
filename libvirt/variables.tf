@@ -71,10 +71,11 @@ variable "packages" {
   description = "List of addditional packagess to install"
   type        = list(string)
   default     = [
+    "conntrack",
+    "curl",
     "jq",
     "socat",
-    "strace",
-    "tmux"
+    "strace"
   ]
 }
 
