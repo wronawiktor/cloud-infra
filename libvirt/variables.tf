@@ -60,11 +60,9 @@ variable "authorized_keys" {
 }
 
 variable "repositories" {
-  description = "Zypper repositories to add"
+  description = "Package repositories to add"
   type        = map(string)
-  default     = {
-    Kernel_stable_Backport = "https://download.opensuse.org/repositories/Kernel:/stable:/Backport/standard/"
-  }
+  default     = {}
 }
 
 variable "packages" {
@@ -89,6 +87,12 @@ variable "cni_plugin" {
   description = "Choose cni-plugin"
   type        = string
   default     = "calico"
+}
+
+variable "registry_mirror" {
+  description = "Container registry mirror"
+  type        = string
+  default     = ""
 }
 
 variable "containerd_version" {

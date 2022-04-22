@@ -5,6 +5,9 @@ locale: ${locale} # en_US.UTF-8
 timezone: ${timezone} # Etc/UTC
 
 users:
+  - name: root
+    ssh_authorized_keys:
+${authorized_keys}
   - name: student
     groups: users
     shell: /bin/bash

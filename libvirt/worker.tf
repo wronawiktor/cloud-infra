@@ -115,7 +115,15 @@ resource "null_resource" "worker_provision" {
   }
 
   provisioner "remote-exec" {
-    script = "provision.sh"
+    script = "provision-k8s-node.sh"
+  }
+}
+
+data "template_file" "worker_containerd_conf" {
+  template = file("configs/config.toml.tpl")
+
+  vars = {
+    registry_mirror = var.registry_mirror
   }
 }
 
@@ -131,6 +139,19 @@ resource "null_resource" "worker_provision_k8s_containerd" {
     user = var.username
     type = "ssh"
     private_key = "${file("~/.ssh/id_rsa")}"
+  }
+
+  provisioner "file" {
+    content     = data.template_file.worker_containerd_conf.rendered
+    destination = "/tmp/config.toml"
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "sudo mkdir /etc/containerd",
+      "sudo mv /tmp/config.toml /etc/containerd",
+      "sudo chwon root:root /etc/containerd/config.toml",
+    ]
   }
 
   provisioner "file" {

@@ -5,6 +5,9 @@ if [ "$(id -u)" != "0" ]; then
   exec sudo "$0" "$@"
 fi
 
+CONTAINERD_VER="latest"
+KUBERNETES_VER="latest"
+
 if [ "$#" -eq 2 ]; then
   CONTAINERD_VER=$1
   KUBERNETES_VER=$2

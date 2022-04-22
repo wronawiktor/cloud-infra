@@ -115,7 +115,15 @@ resource "null_resource" "control_plane_provision" {
   }
 
   provisioner "remote-exec" {
-    script = "provision.sh"
+    script = "provision-k8s-node.sh"
+  }
+}
+
+data "template_file" "control_plane_containerd_conf" {
+  template = file("configs/config.toml.tpl")
+
+  vars = {
+    registry_mirror = var.registry_mirror
   }
 }
 
@@ -134,6 +142,19 @@ resource "null_resource" "control_plane_provision_k8s_containerd" {
   }
 
   provisioner "file" {
+    content     = data.template_file.control_plane_containerd_conf.rendered
+    destination = "/tmp/config.toml"
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "sudo mkdir /etc/containerd",
+      "sudo mv /tmp/config.toml /etc/containerd",
+      "sudo chwon root:root /etc/containerd/config.toml",
+    ]
+  }
+
+  provisioner "file" {
     source      = "provision-k8s-containerd.sh"
     destination = "/tmp/provision-k8s-containerd.sh"
   }
@@ -143,10 +164,10 @@ resource "null_resource" "control_plane_provision_k8s_containerd" {
       "chmod +x /tmp/provision-k8s-containerd.sh",
       "/tmp/provision-k8s-containerd.sh ${var.containerd_version} ${var.kubernetes_version}",
     ]
-}
+  }
 
   provisioner "remote-exec" {
-    script = "provision-k8s-containerd-cp.sh"
+    script = "provision-k8s-helm.sh"
   }
 }
 
