@@ -150,7 +150,7 @@ resource "null_resource" "control_plane_provision_k8s_containerd" {
     inline = [
       "sudo mkdir /etc/containerd",
       "sudo mv /tmp/config.toml /etc/containerd",
-      "sudo chwon root:root /etc/containerd/config.toml",
+      "sudo chown root:root /etc/containerd/config.toml",
     ]
   }
 
