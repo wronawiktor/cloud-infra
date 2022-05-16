@@ -16,6 +16,7 @@ resource "local_file" "hosts" {
   filename = "/tmp/terraform-hosts"
   content  = <<-EOT
 # Managed by Terraform
+${libvirt_domain.control_plane.0.network_interface.0.addresses.0} k8scp
 %{ for id in libvirt_domain.control_plane ~}
 ${id.network_interface.0.addresses.0} ${id.network_interface.0.hostname}
 %{ endfor ~}
