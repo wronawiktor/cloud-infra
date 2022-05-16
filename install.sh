@@ -33,6 +33,8 @@ mkdir -p /etc/libvirt/storage/autostart
 rsync -av files/default.xml /etc/libvirt/storage/
 ln -s /etc/libvirt/storage/default.xml /etc/libvirt/storage/autostart/default.xml
 
+virsh pool-create --build /etc/libvirt/storage/default.xml
+
 # Start libvirtd
 systemctl start libvirtd
 if [[ $(pidof libvirtd) ]]; then
