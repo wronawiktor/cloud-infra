@@ -31,7 +31,7 @@ fi
 
 mkdir -p /etc/libvirt/storage/autostart
 rsync -av files/default.xml /etc/libvirt/storage/
-ln -s /etc/libvirt/storage/files/default.xml /etc/libvirt/storage/autostart/default.xml
+ln -s /etc/libvirt/storage/default.xml /etc/libvirt/storage/autostart/default.xml
 
 # Start libvirtd
 systemctl start libvirtd
