@@ -62,3 +62,5 @@ mkdir -p /etc/systemd/system/kubelet.service.d
 curl -sSL "https://raw.githubusercontent.com/kubernetes/release/${RELEASE_VERSION}/cmd/kubepkg/templates/latest/deb/kubeadm/10-kubeadm.conf" | sed "s:/usr/bin:${DOWNLOAD_DIR}:g" | tee /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
 
 systemctl enable kubelet
+
+sudo sh -c "echo $3 k8scp >> /etc/hosts"
