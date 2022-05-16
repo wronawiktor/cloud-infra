@@ -29,6 +29,10 @@ else
     echo "security_driver is already set to none"
 fi
 
+mkdir /etc/libvirt/storage/autostart
+rsync -av files/default.xml /etc/libvirt/storage/
+ln -s /etc/libvirt/storage/files/default.xml /etc/libvirt/storage/autostart/default.xml
+
 # Start libvirtd
 systemctl start libvirtd
 if [[ $(pidof libvirtd) ]]; then
