@@ -30,7 +30,7 @@ for MASTER in $TR_MASTER_IPS; do
         # As temporary fix we have to disable kubeProxyReplacement for Cilium, https://github.com/cilium/cilium/pull/16084
         ssh -o 'StrictHostKeyChecking no' -l ${TR_USERNAME} ${MASTER} /bin/bash <<-EOF
           set -eux
-          sudo kubeadm init --cri-socket /run/containerd/containerd.sock --control-plane-endpoint ${MASTER}:6443 --upload-certs | tee kubeadm-init.log
+          sudo kubeadm init --cri-socket /run/containerd/containerd.sock --control-plane-endpoint k8scp:6443 --upload-certs | tee kubeadm-init.log
           mkdir -p /home/${TR_USERNAME}/.kube
           sudo cp /etc/kubernetes/admin.conf /home/${TR_USERNAME}/.kube/config
           sudo chown ${TR_USERNAME}:users /home/${TR_USERNAME}/.kube/config
@@ -63,7 +63,8 @@ done
 scp -o 'StrictHostKeyChecking no' ${TR_USERNAME}@${MASTER}:/home/${TR_USERNAME}/.kube/config ./admin.conf
 export KUBECONFIG=`pwd`/admin.conf
 
-RELEASE=$(curl -sSL https://dl.k8s.io/release/stable.txt)
+#RELEASE=$(curl -sSL https://dl.k8s.io/release/stable.txt)
+$RELEASE=$KUBERNETES_VER
 curl -L --remote-name-all https://storage.googleapis.com/kubernetes-release/release/${RELEASE}/bin/linux/amd64/kubectl
 chmod +x kubectl
 ./kubectl get nodes

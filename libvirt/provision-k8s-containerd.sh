@@ -8,9 +8,9 @@ fi
 CONTAINERD_VER="latest"
 KUBERNETES_VER="latest"
 
-if [ "$#" -eq 2 ]; then
+if [ "$#" -eq 3 ]; then
   CONTAINERD_VER=$1
-  KUBERNETES_VER=$2
+  KUBERNETES_VER=$(echo "$2" | sed "s/v//g")
 fi
 
 if [ $CONTAINERD_VER != "latest" ]; then

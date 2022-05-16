@@ -9,8 +9,10 @@ set -eux
 
 # Load br_netfilter
 cat >> /etc/modules-load.d/99-k8s.conf << EOF
+overlay
 br_netfilter
 EOF
+modprobe overlay
 modprobe br_netfilter
 
 # Network-related sysctls

@@ -12,6 +12,7 @@ resource "null_resource" "deploy_kubernetes" {
       TR_MASTER_IPS = join(" ", libvirt_domain.control_plane.*.network_interface.0.addresses.0)
       TR_WORKER_IPS = join(" ", libvirt_domain.worker.*.network_interface.0.addresses.0)
       CNI_PLUGIN    = var.cni_plugin
+      KUBERNETES_VER = var.kubernetes_version
     }
 
     command = "bash deploy-kubernetes.sh"
