@@ -6,5 +6,5 @@ if [ "$(id -u)" != "0" ]; then
 fi
 
 #HELM_VERSION=$(curl -s https://api.github.com/repos/helm/helm/releases/latest | jq -r '.tag_name')
-HELM_VERSION="v3.8.2"
+HELM_VERSION="v3.10.2"
 curl -sSL "https://get.helm.sh/helm-${HELM_VERSION}-linux-amd64.tar.gz" | sudo tar -C /usr/local/bin --strip-components=1 -xzf - linux-amd64/helm

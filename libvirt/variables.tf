@@ -98,13 +98,13 @@ variable "registry_mirror" {
 variable "containerd_version" {
   description = "Choose version of Containerd"
   type        = string
-  default     = "v1.5.9"
+  default     = "v1.5.16"
 }
 
 variable "kubernetes_version" {
   description = "Choose version of Kubernetes"
   type        = string
-  default     = "v1.23.5"
+  default     = "v1.25.4"
 }
 
 variable "username" {
