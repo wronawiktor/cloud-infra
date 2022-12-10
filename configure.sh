@@ -102,9 +102,11 @@ else
     echo "No public ssh key to copy, you can generate it by 'ssh-keygen' "
 fi
 
-# Start Terraform
-terraform init
-# terraform plan
-# terraform apply --auto-approve
+echo
+echo "Installation is complete!!!"
+echo "Go to ~/cloud-infra/libvirt and start terraform"
+echo "terraform init"
+echo "terraform plan"
+echo "terraform apply"
 
 exit 0

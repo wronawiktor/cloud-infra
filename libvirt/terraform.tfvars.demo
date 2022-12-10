@@ -1,19 +1,35 @@
 pool = "default"
 
 image_name = "cloud-image"
-image_path = "https://cloud-images.ubuntu.com/focal/current/focal-server-cloudimg-amd64.img"
+image_path = "/var/lib/libvirt/images/focal-server-cloudimg-amd64.img"
 
 network_name = "cloud-network"
-network_cidr = "10.16.0.0/24"
+network_cidr = "10.10.10.0/24"
 network_mode = "nat"
 
-kubernetes_enable = false
+dns_domain = "cloud.local"
 
+locale = "en_US.UTF-8"
+timezone = "Etc/UTC"
+
+repositories = {}
+
+packages = [
+  "conntrack",
+  "curl",
+  "jq",
+  "socat",
+  "strace"
+]
+
+kubernetes_enable = true
+
+username = "student"
 control_planes = 1
 control_plane_memory = 4096
 control_plane_vcpu = 2
 
-workers = 1
+workers = 3
 worker_memory = 3076
 worker_vcpu = 2
 

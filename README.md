@@ -28,6 +28,8 @@
 
 ## Installation
 
+0. Execute script `./configure.sh` which automatically configure your server for `cloud-infra` project. Otherwise look below what changes should be done on your server.
+
 1. First of all chceck is there any new packages that have just come to the repositories and fetch new versions of packages existing on the machine:
     ```sh
     sudo apt update && apt upgrade --yes
