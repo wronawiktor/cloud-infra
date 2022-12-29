@@ -9,7 +9,7 @@ apt update && apt upgrade --yes
 echo "Upgrade complete"
 
 # Install required packages
-apt install --yes qemu-kvm libvirt-daemon-system libvirt-clients bridge-utils virt-manager git-core libguestfs-tools jq software-properties-common
+apt install --yes qemu-kvm libvirt-daemon-system libvirt-clients bridge-utils virt-manager git-core libguestfs-tools jq software-properties-common dnsmasq
 echo "Install complete"
 
 # Add your user to the libvirt and kvm group
@@ -45,7 +45,7 @@ else
 fi
 
 # Download Linux cloud image
-IMG_PATH="/var/lib/libvirt/images/"
+IMG_PATH="/var/lib/libvirt/images/focal-server-cloudimg-amd64.img"
 if [ -d "$IMG_PATH" ]; then
 	echo "Folder exist"
 else
@@ -54,9 +54,9 @@ else
 	echo "Downloading..."
 fi
 
-curl -L https://cloud-images.ubuntu.com/focal/current/focal-server-cloudimg-amd64.img --output ${IMG_PATH+"focal-server-cloudimg-amd64.img"}
+curl -L https://cloud-images.ubuntu.com/focal/current/focal-server-cloudimg-amd64.img --output "${IMG_PATH}"
 
-if [ -f "${IMG_PATH+"focal-server-cloudimg-amd64.img"}" ]; then
+if [ -f "${IMG_PATH}" ]; then
     echo "System image was downloaded"
 else
     echo "System image download error"
@@ -82,7 +82,7 @@ TF_SET_FILE="./libvirt/terraform.tfvars"
 if [ -f $TF_SET_FILE ]; then
     echo "Terraform settings file already exist"
 else
-    cp ./libvirt/terraform.tfvars.examples $TF_SET_FILE
+    cp ./libvirt/terraform.tfvars.demo $TF_SET_FILE
     if [ -f $TF_SET_FILE ]; then
         echo "Terraform settings file copied"
     else 
@@ -94,8 +94,6 @@ fi
 # Copy your ssh-key
 if [ -f "/root/.ssh/id_rsa.pub" ]; then
     SSH_PUB_KEY="$(cat ~/.ssh/id_rsa.pub)"
-#   echo "authorized_keys = [\n \\"$SSH_PUB_KEY\"]"
-#   test = [\\n \"$TEST\" \\n]" >> "$TF_SET_FILE"
     sed -i -e "s|\"SSH_PUB_KEY\"|\"${SSH_PUB_KEY}\"|g" "$TF_SET_FILE"
     echo "Added your ssh key to terraform settings"
 else

@@ -33,4 +33,6 @@ workers = 3
 worker_memory = 3076
 worker_vcpu = 2
 
-authorized_keys = [ "" ]
+authorized_keys = [ 
+  "SSH_PUB_KEY" 
+]
