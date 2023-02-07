@@ -48,16 +48,17 @@ else
 fi
 
 # Download Linux cloud image
-IMG_PATH="/var/lib/libvirt/images/focal-server-cloudimg-amd64.img"
-if [ -d "$IMG_PATH" ]; then
-	echo "Folder exist"
-else
+IMG_PATH="/var/lib/libvirt/images"
+IMG_NAME="focal-server-cloudimg-amd64.img"
+if [ ! -d "$IMG_PATH" ]; then
 	mkdir -p "$IMG_PATH"
 	echo "Folder has been created: $IMG_PATH"
 	echo "Downloading..."
 fi
 
-wget https://cloud-images.ubuntu.com/focal/current/focal-server-cloudimg-amd64.img -O "${IMG_PATH}"
+if [ ! -d "${IMG_PATH}/${IMG_NAME}" ]; then
+  wget https://cloud-images.ubuntu.com/focal/current/focal-server-cloudimg-amd64.img -O "${IMG_PATH}/${IMG_NAME}"
+fi
 
 if [ -f "${IMG_PATH}" ]; then
     echo "System image was downloaded"
