@@ -56,15 +56,8 @@ if [ ! -d "$IMG_PATH" ]; then
 	echo "Downloading..."
 fi
 
-if [ ! -d "${IMG_PATH}/${IMG_NAME}" ]; then
+if [ ! -f "${IMG_PATH}/${IMG_NAME}" ]; then
   wget https://cloud-images.ubuntu.com/focal/current/focal-server-cloudimg-amd64.img -O "${IMG_PATH}/${IMG_NAME}"
-fi
-
-if [ -f "${IMG_PATH}" ]; then
-    echo "System image was downloaded"
-else
-    echo "System image download error"
-    exit 1
 fi
 
 # Install Terraform
