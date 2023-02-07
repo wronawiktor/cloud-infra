@@ -29,9 +29,12 @@ else
     echo "security_driver is already set to none"
 fi
 
-mkdir -p /etc/libvirt/storage/autostart
 rsync -av files/default.xml /etc/libvirt/storage/
-ln -s /etc/libvirt/storage/default.xml /etc/libvirt/storage/autostart/default.xml
+STORAGE_AUTO="/etc/libvirt/storage/autostart/default.xml"
+if [ ! -L $STORAGE_AUTO ]; then
+  mkdir -p /etc/libvirt/storage/autostart
+  ln -s /etc/libvirt/storage/default.xml /etc/libvirt/storage/autostart/default.xml
+fi
 
 virsh pool-create --build /etc/libvirt/storage/default.xml
 
@@ -54,7 +57,7 @@ else
 	echo "Downloading..."
 fi
 
-curl -L https://cloud-images.ubuntu.com/focal/current/focal-server-cloudimg-amd64.img --output "${IMG_PATH}"
+wget https://cloud-images.ubuntu.com/focal/current/focal-server-cloudimg-amd64.img -O "${IMG_PATH}"
 
 if [ -f "${IMG_PATH}" ]; then
     echo "System image was downloaded"
