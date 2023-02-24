@@ -19,7 +19,7 @@ if [ $CNI_PLUGIN == "cilium" ]; then
     CNI_INSTALL="helm repo add cilium https://helm.cilium.io/
     helm install cilium cilium/cilium --version ${CILIUM_VERSION} --namespace kube-system --set kubeProxyReplacement=disabled"
 else
-    CNI_INSTALL="kubectl apply -f https://projectcalico.docs.tigera.io/manifests/calico.yaml"
+    CNI_INSTALL="kubectl apply -f https://raw.githubusercontent.com/projectcalico/calico/v3.25.0/manifests/calico.yaml"
 fi
 
 info "### Run following commands to bootstrap Kubernetes cluster:\\n"
