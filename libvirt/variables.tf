@@ -107,6 +107,12 @@ variable "kubernetes_version" {
   default     = "v1.25.6"
 }
 
+variable "helm_version" {
+  description = "Choose version of Kubernetes"
+  type        = string
+  default     = "v3.11.2"
+}
+
 variable "username" {
   description = "Default user in VMs"
   default     = "student"

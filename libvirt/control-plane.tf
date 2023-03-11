@@ -166,8 +166,16 @@ resource "null_resource" "control_plane_provision_k8s_containerd" {
     ]
   }
 
+  provisioner "file" {
+    source      = "provision-k8s-helm.sh"
+    destination = "/tmp/provision-k8s-helm.sh"
+  }
+
   provisioner "remote-exec" {
-    script = "provision-k8s-helm.sh"
+    inline = [
+      "chmod +x /tmp/provision-k8s-helm.sh",
+      "/tmp/provision-k8s-helm.sh ${var.helm_version}",
+    ]
   }
 }
 

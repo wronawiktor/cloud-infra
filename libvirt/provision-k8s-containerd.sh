@@ -40,11 +40,11 @@ DOWNLOAD_DIR=/usr/local/bin
 mkdir -p $DOWNLOAD_DIR
 
 if [ $KUBERNETES_VER != "latest" ]; then
-  KUBERNETES_URL=https://storage.googleapis.com/kubernetes-release/release/${2}/bin/linux/amd64/{kubeadm,kubelet,kubectl}
+  KUBERNETES_URL=https://storage.googleapis.com/kubernetes-release/release/${2}/bin/linux/amd64/{kubeadm,kubelet}
   echo "Installing Kubernetes $KUBERNETES_VER"
 else
   KUBERNETES_VER="$(curl -sSL https://dl.k8s.io/release/stable.txt)"
-  KUBERNETES_URL=https://storage.googleapis.com/kubernetes-release/release/${KUBERNETES_VER}/bin/linux/amd64/{kubeadm,kubelet,kubectl}
+  KUBERNETES_URL=https://storage.googleapis.com/kubernetes-release/release/${KUBERNETES_VER}/bin/linux/amd64/{kubeadm,kubelet}
   echo "Installing Kubernetes $KUBERNETES_VER (latest)"
 fi
 
