@@ -63,14 +63,13 @@ done
 scp -o 'StrictHostKeyChecking no' ${TR_USERNAME}@${MASTER}:/home/${TR_USERNAME}/.kube/config ./admin.conf
 export KUBECONFIG=`pwd`/admin.conf
 
-#RELEASE=$(curl -sSL https://dl.k8s.io/release/stable.txt)
 RELEASE=$KUBERNETES_VER
 curl -L --remote-name-all https://storage.googleapis.com/kubernetes-release/release/${RELEASE}/bin/linux/amd64/kubectl
 chmod +x kubectl
 ./kubectl get nodes
 
 log ""
-log "WARNING!!! To start with K8s cluster please run following command:"
+log "WARNING!!! To start play with K8s cluster please run following command:"
 log "export KUBECONFIG=`pwd`/admin.conf"
 log "./kubectl get nodes"
 log ""
