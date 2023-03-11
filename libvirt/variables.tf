@@ -98,7 +98,7 @@ variable "registry_mirror" {
 variable "containerd_version" {
   description = "Choose version of Containerd"
   type        = string
-  default     = "v1.5.16"
+  default     = "v1.6.19"
 }
 
 variable "kubernetes_version" {
