@@ -104,13 +104,13 @@ variable "containerd_version" {
 variable "kubernetes_version" {
   description = "Choose version of Kubernetes"
   type        = string
-  default     = "v1.25.6"
+  default     = "v1.25.9"
 }
 
 variable "helm_version" {
   description = "Choose version of Kubernetes"
   type        = string
-  default     = "v3.11.2"
+  default     = "v3.11.3"
 }
 
 variable "username" {
