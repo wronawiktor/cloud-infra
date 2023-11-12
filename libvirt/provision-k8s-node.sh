@@ -5,12 +5,15 @@ if [ "$(id -u)" != "0" ]; then
   exec sudo "$0" "$@"
 fi
 
-if [ "$#" -eq 3 ]; then
+if [ "$#" -eq 4 ]; then
   CONTAINERD_VER=$(echo "$1" | sed "s/v//g") #Delete "v" from string
   CONTAINERD_URL=https://github.com/containerd/containerd/releases/download/v${CONTAINERD_VER}/cri-containerd-cni-${CONTAINERD_VER}-linux-amd64.tar.gz
 
   KUBERNETES_VER=$(echo "$2" | sed "s/v//g")
-  KUBERNETES_URL=https://storage.googleapis.com/kubernetes-release/release/${2}/bin/linux/amd64/{kubeadm,kubelet}  
+  KUBERNETES_URL=https://storage.googleapis.com/kubernetes-release/release/${2}/bin/linux/amd64/{kubeadm,kubelet}
+
+  RELEASE_VER=$3
+  RELEASE_URL=https://raw.githubusercontent.com/kubernetes/release/${RELEASE_VER}/cmd/kubepkg/templates/latest/deb/kubelet/lib/systemd/system/kubelet.service
 fi
 
 if curl --output /dev/null --silent --head --fail "$CONTAINERD_URL"; then
@@ -46,11 +49,18 @@ cd $DOWNLOAD_DIR
 curl -L --remote-name-all "${KUBERNETES_URL}"
 chmod +x {kubeadm,kubelet}
 
-RELEASE_VERSION=$(curl -s https://api.github.com/repos/kubernetes/release/releases/latest | jq -r '.name')
-curl -sSL "https://raw.githubusercontent.com/kubernetes/release/${RELEASE_VERSION}/cmd/kubepkg/templates/latest/deb/kubelet/lib/systemd/system/kubelet.service" | sed "s:/usr/bin:${DOWNLOAD_DIR}:g" | tee /etc/systemd/system/kubelet.service
+if [ `curl -s -o /dev/null -w "%{http_code}" "$RELEASE_URL"` == 200 ]; then
+  echo "Installing Kubernetes release $RELEASE_VER"
+else
+  RELEASE_VER=$(curl -s https://api.github.com/repos/kubernetes/release/releases/latest | jq -r '.name')
+  echo "Installing Kubernetes release $RELEASE_VER (latest)"
+fi
+
+curl -sSL "https://raw.githubusercontent.com/kubernetes/release/${RELEASE_VER}/cmd/kubepkg/templates/latest/deb/kubelet/lib/systemd/system/kubelet.service" | sed "s:/usr/bin:${DOWNLOAD_DIR}:g" | tee /etc/systemd/system/kubelet.service
+
 mkdir -p /etc/systemd/system/kubelet.service.d
-curl -sSL "https://raw.githubusercontent.com/kubernetes/release/${RELEASE_VERSION}/cmd/kubepkg/templates/latest/deb/kubeadm/10-kubeadm.conf" | sed "s:/usr/bin:${DOWNLOAD_DIR}:g" | tee /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
+curl -sSL "https://raw.githubusercontent.com/kubernetes/release/${RELEASE_VER}/cmd/kubepkg/templates/latest/deb/kubeadm/10-kubeadm.conf" | sed "s:/usr/bin:${DOWNLOAD_DIR}:g" | tee /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
 
 systemctl enable kubelet
 
-sudo sh -c "echo $3 k8scp >> /etc/hosts"
+sudo sh -c "echo $4 k8scp >> /etc/hosts"

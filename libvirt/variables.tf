@@ -101,10 +101,16 @@ variable "containerd_version" {
   default     = "v1.6.21"
 }
 
+variable "kubernetes_release" {
+  description = "Choose Kubernetes release"
+  type        = string
+  default     = "v0.15.1"
+}
+
 variable "kubernetes_version" {
   description = "Choose version of Kubernetes"
   type        = string
-  default     = "v1.26.6"
+  default     = "v1.27.7"
 }
 
 variable "helm_version" {

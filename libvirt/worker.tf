@@ -162,7 +162,7 @@ resource "null_resource" "worker_provision_k8s_containerd" {
   provisioner "remote-exec" {
   inline = [
     "chmod +x /tmp/provision-k8s-node.sh",
-    "/tmp/provision-k8s-node.sh ${var.containerd_version} ${var.kubernetes_version} ${libvirt_domain.control_plane.0.network_interface.0.addresses.0}",
+    "/tmp/provision-k8s-node.sh ${var.containerd_version} ${var.kubernetes_version} ${var.kubernetes_release} ${libvirt_domain.control_plane.0.network_interface.0.addresses.0}",
     ]
   }
 }
