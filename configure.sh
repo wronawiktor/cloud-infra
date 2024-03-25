@@ -91,8 +91,8 @@ fi
 # Copy your ssh-key
 if [ -f "/root/.ssh/id_rsa.pub" ]; then
     SSH_PUB_KEY="$(cat ~/.ssh/id_rsa.pub)"
-    sed -i -e "s|\"SSH_PUB_KEY\"|\"${SSH_PUB_KEY}\"|g" "$TF_SET_FILE"
-    echo "Added your ssh key to terraform settings"
+    sed -i -e 's|authorized_keys\s=\s\[\".*\"\]\s\#ssh_ends|authorized_keys = [\"'"${SSH_PUB_KEY}"'\"] \#ssh_ends|g' $TF_SET_FILE
+    echo "Adding your actual ssh key to terraform.tfvars settings file"
 else
     echo "No public ssh key to copy, you can generate it by 'ssh-keygen' "
 fi

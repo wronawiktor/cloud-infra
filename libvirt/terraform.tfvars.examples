@@ -90,7 +90,5 @@
 
 # ssh keys to inject into all the nodes
 # EXAMPLE:
-authorized_keys = [
- "SSH_PUB_KEY"
-]
+authorized_keys = ["SSH_PUB_KEY"] #ssh_ends
 
