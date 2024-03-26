@@ -1,15 +1,26 @@
 #!/bin/bash
 
 if [ "$(id -u)" != "0" ]; then
-  exec sudo "$0" "$@"
+    exec sudo "$0" "$@"
 fi
 
+# Check for os distro
+OS_ID="$(awk -F= '$1=="ID" { print $2 ;}' /etc/os-release)"
+
 # Chceck is there any new packages
-apt update && apt upgrade --yes
+if [ $OS_ID = "fedora" ] ; then
+    dnf update --assumeyes && dnf upgrade --assumeyes
+else
+    apt update && apt upgrade --yes
+fi
 echo "Upgrade complete"
 
 # Install required packages
-apt install --yes qemu-kvm libvirt-daemon-system libvirt-clients bridge-utils virt-manager git-core libguestfs-tools jq software-properties-common dnsmasq
+if [ $OS_ID = "fedora" ] ; then
+    dnf install --assumeyes qemu-kvm bridge-utils virt-manager git-core libguestfs-tools jq dnsmasq libvirt virt-install @virtualization
+else
+    apt install --yes qemu-kvm libvirt-daemon-system libvirt-clients bridge-utils virt-manager git-core libguestfs-tools jq software-properties-common dnsmasq
+fi
 echo "Install complete"
 
 # Add your user to the libvirt and kvm group
@@ -47,6 +58,14 @@ else
         exit 1
 fi
 
+# Add right socket to libvirtd.conf (Fedora only)
+if [ $OS_ID = "fedora" ] ; then
+    LIB_CONF_FILE="/etc/libvirt/libvirtd.conf"
+    if ! grep -q 'listen_socket = "/var/run/libvirt/libvirt-sock"' "$LIB_CONF_FILE" ; then
+        echo 'listen_socket = "/var/run/libvirt/libvirt-sock"' >> $LIB_CONF_FILE
+    fi
+fi
+
 # Download Linux cloud image
 IMG_PATH="/var/lib/libvirt/images"
 IMG_NAME="focal-server-cloudimg-amd64.img"
@@ -62,8 +81,13 @@ fi
 
 # Install Terraform
 curl -fsSL https://apt.releases.hashicorp.com/gpg | apt-key add -
-apt-add-repository "deb [arch=$(dpkg --print-architecture)] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
-apt install terraform
+if [ $OS_ID = "fedora" ] ; then
+    wget -O- https://rpm.releases.hashicorp.com/fedora/hashicorp.repo | sudo tee /etc/yum.repos.d/hashicorp.repo
+    dnf install terraform
+else
+    apt-add-repository "deb [arch=$(dpkg --print-architecture)] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
+    apt install terraform
+fi
 if command -v terraform &> /dev/null; then
     echo "Terraform installation complete"
 else
@@ -92,7 +116,7 @@ fi
 if [ -f "/root/.ssh/id_rsa.pub" ]; then
     SSH_PUB_KEY="$(cat ~/.ssh/id_rsa.pub)"
     sed -i -e 's|authorized_keys\s=\s\[\".*\"\]\s\#ssh_ends|authorized_keys = [\"'"${SSH_PUB_KEY}"'\"] \#ssh_ends|g' $TF_SET_FILE
-    echo "Adding your actual ssh key to terraform.tfvars settings file"
+      echo "Adding your actual ssh key to terraform.tfvars settings file"
 else
     echo "No public ssh key to copy, you can generate it by 'ssh-keygen' "
 fi
